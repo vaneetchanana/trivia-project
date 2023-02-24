@@ -79,38 +79,32 @@ export default function MainScreen() {
 
         console.log('checking answers')
         setTriviaData(prevData => {
-            console.log(prevData);
-            return prevData
-        //     return prevData.map(prevObj =>
-        //     ({
-        //         ...prevObj,
-        //         options: prevObj.options.map(option => {
-        //             if(option.clicked && prevObj.correctAnswer === option.option) {
-        //                 console.log('c.a' + prevObj.correctAnswer)
-        //                 console.log('o' + option.option)
-        //                 setScore(prevScore => prevScore + 1)
-        //             }
+            return prevData.map(prevObj =>
+            ({
+                ...prevObj,
+                options: prevObj.options.map(option => {
+                    if(option.clicked && prevObj.correctAnswer === option.option) {
+                        console.log('c.a' + prevObj.correctAnswer)
+                        console.log('o' + option.option)
+                        setScore(prevScore => prevScore + 1)
+                    }
 
-        //             return {
-        //                 ...option,
-        //                 correctAnswer: prevObj.correctAnswer === option.option ? true : false,
-        //                 wrongAnswer: option.clicked && prevObj.correctAnswer !== option.option ? true : false
-        //             }
-        //         })
-        //     }))
+                    return {
+                        ...option,
+                        correctAnswer: prevObj.correctAnswer === option.option ? true : false,
+                        wrongAnswer: option.clicked && prevObj.correctAnswer !== option.option ? true : false
+                    }
+                })
+            }))
         })
-
-        // console.log(triviaData)
-
-        // setAnswersChecked(true)
+        setAnswersChecked(true)
     }
 
-    // console.log('hello')
-    // console.log(triviaData)
 
     function playAgain() {
         getData()
         setAnswersChecked(false)
+        setScore(0)
     }
 
 
