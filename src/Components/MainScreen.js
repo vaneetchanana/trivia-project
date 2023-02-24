@@ -27,15 +27,13 @@ export default function MainScreen() {
                         const randomNum = Math.floor(Math.random() * 4);
                         let options = [...incorrectAnswers]
                         options.splice(randomNum, 0, correctAnswer)
-                        return options.map(option => {
-                            return {
-                                option: option,
-                                clicked: false,
-                                id: nanoid(),
-                                correctAnswer: false,
-                                wrongAnswer: false
-                            }
-                        })
+                        return options.map(option => ({
+                            option: option,
+                            clicked: false,
+                            id: nanoid(),
+                            correctAnswer: false,
+                            wrongAnswer: false
+                        }))
                     }
 
                     return {
@@ -60,17 +58,13 @@ export default function MainScreen() {
 
     function clicked(event) {
         setTriviaData(prevData => {
-            return prevData.map(obj => {
-                return {
-                    ...obj,
-                    options: obj.options.map(option => {
-                        return {
-                            ...option,
-                            clicked: event.target.id === option.id ? !option.clicked : option.clicked
-                        }
-                    })
-                }
-            })
+            return prevData.map(obj => ({
+                ...obj,
+                options: obj.options.map(option => ({
+                    ...option,
+                    clicked: event.target.id === option.id ? !option.clicked : option.clicked
+                }))
+            }))
         })
     }
 
@@ -79,21 +73,24 @@ export default function MainScreen() {
 
         console.log('checking answers')
         setTriviaData(prevData => {
-            return prevData.map(prevObj =>
-            ({
+            console.log(prevData)
+            return prevData.map(prevObj => ({
                 ...prevObj,
                 options: prevObj.options.map(option => {
-                    if(option.clicked && prevObj.correctAnswer === option.option) {
-                        console.log('c.a' + prevObj.correctAnswer)
-                        console.log('o' + option.option)
+                    if (option.clicked && prevObj.correctAnswer === option.option) {
                         setScore(prevScore => prevScore + 1)
+                        return {
+                            ...option,
+                            correctAnswer: true
+                        }
+                    } else if (option.clicked && prevObj.correctAnswer !== option.option) {
+                        return {
+                            ...option,
+                            wrongAnswer: true
+                        }
                     }
 
-                    return {
-                        ...option,
-                        correctAnswer: prevObj.correctAnswer === option.option ? true : false,
-                        wrongAnswer: option.clicked && prevObj.correctAnswer !== option.option ? true : false
-                    }
+                    return option
                 })
             }))
         })
