@@ -58,13 +58,16 @@ export default function MainScreen() {
 
     function clicked(event) {
         setTriviaData(prevData => {
-            return prevData.map(obj => ({
-                ...obj,
-                options: obj.options.map(option => ({
-                    ...option,
-                    clicked: event.target.id === option.id ? !option.clicked : option.clicked
-                }))
-            }))
+            console.log(prevData)
+            return prevData.map(obj => {
+                return {
+                    ...obj,
+                    options: obj.options.map(option => ({
+                        ...option,
+                        clicked: event.target.id === option.id ? !option.clicked : option.clicked
+                    }))
+                }
+            })
         })
     }
 
