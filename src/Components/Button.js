@@ -3,7 +3,6 @@ import React from "react"
 export default function Button(props) {
 
     const {correctAnswer, wrongAnswer, clicked, id, option, index } = props.optionObj
-    console.log(props.answersChecked)
 
     function setStyle() {
 

@@ -1,6 +1,5 @@
 import Button from './Button'
 import { nanoid } from 'nanoid'
-import { useState } from 'react'
 
 export default function Question(props) {
     // console.log(props.answersChecked)

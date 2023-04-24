@@ -1,5 +1,4 @@
 .start-screen {
-    /* width: 550px; */
     height: 100vh;
     background: url('../images/startScreen-top.png') right top, url('../images/startScreen-bottom.png') left bottom;
     background-repeat: no-repeat;

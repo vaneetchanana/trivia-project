@@ -61,16 +61,7 @@ export default function MainScreen() {
                 return {
                     ...obj,
                     options: obj.options.map(option => {
-                        // function checkClick() {
-                        //     if(option.clicked) {
-                        //         return false
-                        //     }else if(event.target.id === option.id) {
-                        //         return !option.clicked
-                        //     }else {
-                        //         option.clicked
-                        //     }
-                        // }
-
+                    
                         if(option.id === id) {
                             return {
                                 ...option,
@@ -85,11 +76,6 @@ export default function MainScreen() {
                             return option
                         }
 
-
-                        // return {
-                        //     ...option,
-                        //     clicked: event.target.id === option.id ? !option.clicked : option.clicked
-                        // }
                     })
                 }
             })

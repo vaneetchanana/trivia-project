@@ -5,8 +5,8 @@ import {
   Routes,
   BrowserRouter,
 } from 'react-router-dom';
-import StartScreen from './Components/StartScreen'
-import MainScreen from './Components/MainScreen'
+import StartScreen from './components/StartScreen'
+import MainScreen from './components/MainScreen'
 import './App.css';
 
 
