@@ -1,30 +1,27 @@
 
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
 import StartScreen from './Components/StartScreen'
 import MainScreen from './Components/MainScreen'
 import './App.css';
 
+const router = createBrowserRouter(createRoutesFromElements(
+  <Route path='/' >
+    <Route index element={<StartScreen />} />
+    <Route path='main' element={<MainScreen />} />
+    {/* catch all route */}
+    <Route path='*' element={<h1>Page not found!</h1>} />
+  </Route>
+))
+
 function App() {
-
-  // const [gameStart, setGameStart] = React.useState(false)
-
-  // function gameStarter() {
-  //   setGameStart(prevState => !prevState)
-  // }
   return (
-    <div className="App">
-    <Routes>
-      <Route path='/' element={<StartScreen />} />
-      <Route path='/main' element={<MainScreen />} />
-    </Routes>
-
-      {/* {
-        gameStart ?
-          <MainScreen /> :
-          <StartScreen gameStarter={gameStarter} />
-      } */}
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

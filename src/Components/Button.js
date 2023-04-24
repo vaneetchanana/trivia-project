@@ -2,7 +2,8 @@ import React from "react"
 
 export default function Button(props) {
 
-    const {correctAnswer, wrongAnswer, clicked, id, option} = props.optionObj
+    const {correctAnswer, wrongAnswer, clicked, id, option, index } = props.optionObj
+    console.log(props.answersChecked)
 
     function setStyle() {
 
@@ -14,7 +15,8 @@ export default function Button(props) {
         }else if(wrongAnswer) {
             return {
                 backgroundColor : "#F8BCBC",
-                border : "1px solid #F8BCBC"
+                border : "1px solid #F8BCBC",
+                opacity: '0.5'
             }
         } else if(clicked) {
             return {
@@ -30,10 +32,11 @@ export default function Button(props) {
 
     return (
         <button
-            onClick={(event) => props.clicked(event)}
+            onClick={!props.answersChecked ? (event) => props.clicked(event) : null}
             style={style}
-            className={'main-button'}
+            className={'option'}
             id={id}
+            data-index={index}
         >
             {option}
         </button>

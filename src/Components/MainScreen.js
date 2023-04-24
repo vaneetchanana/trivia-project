@@ -4,48 +4,45 @@ import React from 'react'
 import Question from './Question'
 import { nanoid } from "nanoid"
 
-
-
-
 export default function MainScreen() {
 
     const [triviaData, setTriviaData] = React.useState([])
     const [answersChecked, setAnswersChecked] = React.useState(false)
     const [score, setScore] = React.useState(0)
 
-    function getData() {
-        fetch("https://opentdb.com/api.php?amount=4&category=14&difficulty=easy&type=multiple")
-            .then(res => res.json())
-            .then(data => {
 
-                const dataArr = data.results.map(element => {
+    async function getData() {
+        let res = await fetch("https://opentdb.com/api.php?amount=4&category=14&difficulty=easy&type=multiple")
+        let data = await res.json()
 
-                    const correctAnswer = element.correct_answer;
-                    const incorrectAnswers = element.incorrect_answers;
+        const dataArr = data.results.map((element, index) => {
 
-                    function createOptionsArray(incorrectAnswers, correctAnswer) {
-                        const randomNum = Math.floor(Math.random() * 4);
-                        let options = [...incorrectAnswers]
-                        options.splice(randomNum, 0, correctAnswer)
-                        return options.map(option => ({
-                            option: option,
-                            clicked: false,
-                            id: nanoid(),
-                            correctAnswer: false,
-                            wrongAnswer: false
-                        }))
-                    }
+            const correctAnswer = element.correct_answer;
+            const incorrectAnswers = element.incorrect_answers;
 
-                    return {
-                        question: element.question,
-                        correctAnswer: correctAnswer,
-                        incorrectAnswers: incorrectAnswers,
-                        options: createOptionsArray(incorrectAnswers, correctAnswer)
-                    }
-                })
-                setTriviaData(dataArr)
-            })
+            function createOptionsArray(incorrectAnswers, correctAnswer) {
+                const randomNum = Math.floor(Math.random() * 4);
+                let options = [...incorrectAnswers]
+                options.splice(randomNum, 0, correctAnswer)
+                return options.map(option => ({
+                    option: option,
+                    clicked: false,
+                    id: nanoid(),
+                    correctAnswer: false,
+                    wrongAnswer: false,
+                    index : index.toString()
+                }))
+            }
 
+            return {
+                question: element.question,
+                correctAnswer: correctAnswer,
+                incorrectAnswers: incorrectAnswers,
+                options: createOptionsArray(incorrectAnswers, correctAnswer)
+            }
+        })
+        console.log(dataArr )
+        setTriviaData(dataArr)
     }
 
 
@@ -57,15 +54,43 @@ export default function MainScreen() {
 
 
     function clicked(event) {
+        const index = event.target.getAttribute('data-index')
+        const id = event.target.id
         setTriviaData(prevData => {
-            console.log(prevData)
             return prevData.map(obj => {
                 return {
                     ...obj,
-                    options: obj.options.map(option => ({
-                        ...option,
-                        clicked: event.target.id === option.id ? !option.clicked : option.clicked
-                    }))
+                    options: obj.options.map(option => {
+                        // function checkClick() {
+                        //     if(option.clicked) {
+                        //         return false
+                        //     }else if(event.target.id === option.id) {
+                        //         return !option.clicked
+                        //     }else {
+                        //         option.clicked
+                        //     }
+                        // }
+
+                        if(option.id === id) {
+                            return {
+                                ...option,
+                                clicked : true
+                            }
+                        }else if(option.index === index) {
+                            return {
+                                ...option,
+                                clicked : false
+                            }
+                        }else {
+                            return option
+                        }
+
+
+                        // return {
+                        //     ...option,
+                        //     clicked: event.target.id === option.id ? !option.clicked : option.clicked
+                        // }
+                    })
                 }
             })
         })
@@ -74,19 +99,21 @@ export default function MainScreen() {
 
     function checkAnswers() {
 
-        console.log('checking answers')
         setTriviaData(prevData => {
-            console.log(prevData)
             return prevData.map(prevObj => ({
                 ...prevObj,
                 options: prevObj.options.map(option => {
-                    if (option.clicked && prevObj.correctAnswer === option.option) {
-                        setScore(prevScore => prevScore + 1)
+                    if (prevObj.correctAnswer === option.option) {
+
+                        if (option.clicked && prevObj.correctAnswer === option.option) {
+                            setScore(prevScore => prevScore + 1)
+                        }
+
                         return {
                             ...option,
                             correctAnswer: true
                         }
-                    } else if (option.clicked && prevObj.correctAnswer !== option.option) {
+                    } else if (option.clicked) {
                         return {
                             ...option,
                             wrongAnswer: true
@@ -115,6 +142,8 @@ export default function MainScreen() {
                 options={triviaObj.options}
                 clicked={clicked}
                 key={nanoid()}
+                data={triviaObj}
+                answersChecked={answersChecked}
             />
         )
     })
@@ -123,15 +152,15 @@ export default function MainScreen() {
     return (
         <div className='main'>
             <div>
-                {questions}
+                {triviaData.length > 0 ? questions : <h2>loading...</h2>}
             </div>
             {
                 answersChecked ?
-                    <div>
-                        <div>{`Your score is ${score}/4`}</div>
-                        <button onClick={playAgain}>Play again</button>
+                    <div className='main-score'>
+                        <div>{`You scored ${score}/4 correct answers`}</div>
+                        <button className='main-button play-again-button' onClick={playAgain}>Play again</button>
                     </div> :
-                    <button onClick={checkAnswers}>Check answers</button>
+                    triviaData.length > 0 && <button className='main-button check-answer-button' onClick={checkAnswers}>Check answers</button>
             }
         </div>
     )
